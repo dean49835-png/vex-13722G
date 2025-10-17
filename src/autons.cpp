@@ -53,6 +53,7 @@ void default_constants() {
 ///
 void drive_example() 
 {
+  piston.set(false);
   in.move(0); 
   basket.move(127);
   everything.move(127);  
@@ -65,26 +66,99 @@ void drive_example()
   chassis.pid_wait();
   chassis.pid_turn_set(36_deg, TURN_SPEED);
   chassis.pid_wait();
+  chassis.pid_drive_set(14_in, DRIVE_SPEED, true);    //get 3 blocks
+  chassis.pid_wait(); 
+
+  chassis.pid_drive_set(-10_in, 80, true);       
+  chassis.pid_wait();                                 //go back
+
+  chassis.pid_turn_set(120_deg, TURN_SPEED);    
+  chassis.pid_wait(); 
+  chassis.pid_drive_set(31_in, DRIVE_SPEED, true);  
+  chassis.pid_wait();                                
+  chassis.pid_turn_set(180_deg, TURN_SPEED);
+  chassis.pid_wait();                                 //face the loaders
+
+  piston.set(true);   
+  pros::delay(1300);                                
+  chassis.pid_wait(); 
+  chassis.pid_drive_set(8_in, DRIVE_SPEED, true);  
+  chassis.pid_wait();  
+  in.move(0); 
+  basket.move(127);
+  everything.move(127);  
+  chassis.pid_drive_set(7_in, DRIVE_SPEED, true);       //driving toward match loader
+  
+  pros::delay(1300);
+  chassis.pid_wait(); 
+
+  chassis.pid_drive_set(5_in, DRIVE_SPEED, true); 
+  chassis.pid_wait();  
+   
+  chassis.pid_drive_set(-7_in, DRIVE_SPEED, true);  
+  chassis.pid_wait();
+  in.move(0); 
+  basket.move(0);
+  everything.move(0);                                 //scoring points
+  chassis.pid_wait(); 
+  
+
+  chassis.pid_turn_set(360_deg, TURN_SPEED);        //faces top scoreing
+  chassis.pid_wait(); 
+  piston.set(false);
+  chassis.pid_drive_set(18_in, DRIVE_SPEED, true);  
+  chassis.pid_wait();
+  in.move(-127);
+  basket.move(-127);
+  everything.move(127);    
+  pros::delay(6700);
+  chassis.pid_drive_set(4_in, DRIVE_SPEED, true);     //drive toward scoring load
+  pros::delay(1700);
+
+  chassis.pid_drive_set(-7_in, DRIVE_SPEED, true);      //drive away
+  chassis.pid_wait(); 
+  chassis.pid_drive_set(7_in, DRIVE_SPEED, true);     //drive toward scoring load
+  chassis.pid_wait(); 
+
+
+  chassis.pid_drive_set(-5_in, DRIVE_SPEED, true);      //drive away
+  chassis.pid_wait();
+
+
+  
+
+  
+
+
+
+
+/** 
+  in.move(0); 
+  basket.move(127);
+  everything.move(127);  
+
+  chassis.pid_drive_set(28_in, 80, true);  
+  chassis.pid_wait();
+  chassis.pid_turn_set(360_deg - 36_deg, TURN_SPEED);
+  chassis.pid_wait();
   chassis.pid_drive_set(14_in, DRIVE_SPEED, true);  
   chassis.pid_wait(); 
 
    chassis.pid_drive_set(-10_in, 80, true);  
   chassis.pid_wait();
 
-  chassis.pid_turn_set(120_deg, TURN_SPEED);
+  chassis.pid_turn_set(360_deg - 120_deg, TURN_SPEED);
   chassis.pid_wait(); 
   chassis.pid_drive_set(29_in, DRIVE_SPEED, true);  
   chassis.pid_wait(); 
 
-  chassis.pid_turn_set(180_deg, TURN_SPEED);
+  chassis.pid_turn_set(360_deg - 180_deg, TURN_SPEED);
   chassis.pid_wait(); 
 
   piston.set(true);
-  
 
 
-
-  
+  */
 }
 
 ///
