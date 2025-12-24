@@ -22,4 +22,6 @@ void intake_opcontrol();
 void set_everything(int input);
 void intake_opcontrol();
 
-inline ez::Piston piston('H', true); 
+inline ez::Piston piston('H', false); 
+inline ez::Piston wing('A', false); 
+inline ez::Piston pod('B', false); 

@@ -9,7 +9,7 @@
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
     {11, -12, -13},     // Left Chassis Ports (negative port will reverse it!)
-    { 18, 19, -20},  // Right Chassis Ports (negative port will reverse it!)
+    {18, 19, -20},  // Right Chassis Ports (negative port will reverse it!)
 
     17,      // IMU Port
     3.25,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
@@ -58,10 +58,10 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
+      {"skills right side", wait_until_change_speed},
       {"Right side", drive_example},
       {"Left side", turn_example},
       {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
-      {"Drive and Turn\n\nSlow down during drive", wait_until_change_speed},
       {"Swing Turn\n\nSwing in an 'S' curve", swing_example},
       {"Motion Chaining\n\nDrive forward, turn, and come back, but blend everything together :D", motion_chaining},
       {"Combine all 3 movements", combining_movements},
@@ -252,7 +252,10 @@ void opcontrol()
 
     chassis.opcontrol_tank();  // Tank control
 
-    piston.button_toggle(master.get_digital(DIGITAL_X));
+    wing.button_toggle(master.get_digital(DIGITAL_B));
+    piston.button_toggle(master.get_digital(DIGITAL_DOWN));
+    pod.button_toggle(master.get_digital(DIGITAL_LEFT));
+
 
     if(master.get_digital_new_press(DIGITAL_L1))
     {
@@ -260,7 +263,7 @@ void opcontrol()
     }
     else if(l1)
     {
-      in.move(0); 
+      in.move(-127); 
       basket.move(127);
       everything.move(127);  
     }
@@ -282,6 +285,18 @@ void opcontrol()
       in.move(0); 
       basket.move(-127);
       everything.move(-127); 
+    }
+    else if(master.get_digital(DIGITAL_Y))
+    {
+      in.move(60);
+      basket.move(-60);
+      everything.move(60); 
+    }
+    else if(master.get_digital(DIGITAL_RIGHT))
+    {
+      in.move(0); 
+      basket.move(-90);
+      everything.move(-90); 
     }
     else
     {
