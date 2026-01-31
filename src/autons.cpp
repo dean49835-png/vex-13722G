@@ -8,7 +8,7 @@
 // These are out of 127
 const int DRIVE_SPEED = 110;
 const int TURN_SPEED = 80;
-const int SWING_SPEED = 110;
+const int SWING_SPEED = 127;            //speed: 110
 
 ///
 // Constants
@@ -51,193 +51,264 @@ void default_constants() {
 ///
 // Drive Example
 ///
-void drive_example()  
+void drive_example()               //right side auto split
 {
-  piston.set(false);
-  in.move(0); 
+  chassis.pid_targets_reset();                // Resets PID targets to 0
+  chassis.drive_imu_reset();                  // Reset gyro position to 0
+  chassis.drive_sensor_reset();               // Reset drive sensors to 0
+  chassis.odom_xyt_set(0_in, 0_in, 0_deg);    // Set the current position, you can start at a specific position with this
+  chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
+  
+  wing.set(true);
+  in.move(127); 
   basket.move(127);
   everything.move(127); 
 
-  chassis.pid_drive_set(28_in, 110, true);  
+  chassis.pid_drive_set(20_in, 127, true); 
+  chassis.pid_wait_quick();
+
+  chassis.pid_swing_set(ez::RIGHT_SWING, -70_deg, 127, -30);          //faces bottom goal
+  chassis.pid_wait_quick();
+
+  everything.move(-100); 
+  chassis.pid_drive_set(11_in, 127, true); 
+  in.move(0); 
+  basket.move(-100); 
+  pros::delay(1000);                              
   chassis.pid_wait();
 
-  chassis.pid_swing_set(ez::LEFT_SWING, 45_deg, SWING_SPEED, 5);
+  in.move(90); 
+  basket.move(90);
+  everything.move(90);
+  chassis.pid_drive_set(-47_in, 127, true); 
+  chassis.pid_wait_quick();
+
+  chassis.pid_swing_set(ez::LEFT_SWING, 150_deg, 127, -120);          
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(13_in, 127, true);                        //match laoaders
   chassis.pid_wait();
 
-  chassis.pid_drive_set(5_in, 70, true);  
-  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(-20_in, 127, true); 
+  chassis.pid_wait_quick();
 
-  chassis.pid_drive_set(-10_in, 110, true);  
-  chassis.pid_wait();
+  chassis.pid_swing_set(ez::LEFT_SWING, -25_deg, 127, -120);          
+  chassis.pid_wait_quick();
 
-  chassis.pid_swing_set(ez::RIGHT_SWING, 100_deg, SWING_SPEED, 5);
-  chassis.pid_wait();
-  
-  chassis.pid_drive_set(38_in, 110, true);        //maybe 40 if it goes to less
-  chassis.pid_wait();
-
-  chassis.pid_turn_set(180_deg, TURN_SPEED);
-  chassis.pid_wait();
-
-  piston.set(true);
-  chassis.pid_wait_quick_chain();
-
-  everything.move(65); 
-  chassis.pid_drive_set(26_in, 40, true);         //first time driving towards match loader
-  chassis.pid_wait();
- 
-  /**for (int i = 0; i < 5; i++)
-  {
-    chassis.pid_drive_set(-5_in, 70, true);         
-    chassis.pid_wait_quick_chain();
-    chassis.pid_drive_set(5_in, 70, true);         
-    chassis.pid_wait_quick_chain();
-  } */
-
-  chassis.pid_drive_set(-18_in, 110, true);  
-  chassis.pid_wait();
-
-  piston.set(false);
-  chassis.pid_wait_quick_chain();
-
-  chassis.pid_turn_set(0_deg, TURN_SPEED);
-  chassis.pid_wait();
-  
-  chassis.pid_drive_set(10_in, 110, true);                    //going close to the goal
-  chassis.pid_wait();
-  
-  in.move(0);
-  basket.move(0);
-  everything.move(0); 
-  chassis.pid_wait();
-
-  in.move(-127);
+  in.move(-127); 
   basket.move(-127);
-  everything.move(127); 
-  chassis.pid_wait();
-
-  pros::delay(20000);
-  chassis.pid_wait();
+  chassis.pid_drive_set(10_in, 127, true); 
+  everything.move(127);
+  pros::delay(150000);
 }
 
 ///
 // Turn Example
 ///
-void turn_example() {                 //second, left
+void turn_example() {                 //left side split
 
-  piston.set(false);
-  in.move(0); 
+  //split left auto
+  chassis.pid_targets_reset();                // Resets PID targets to 0
+  chassis.drive_imu_reset();                  // Reset gyro position to 0
+  chassis.drive_sensor_reset();               // Reset drive sensors to 0
+  chassis.odom_xyt_set(0_in, 0_in, 0_deg);    // Set the current position, you can start at a specific position with this
+  chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
+  
+  wing.set(true);
+  in.move(-127); 
   basket.move(127);
-  everything.move(95); 
-
-  chassis.pid_drive_set(28_in, 110, true);          
-  chassis.pid_wait();
-
-  chassis.pid_swing_set(ez::LEFT_SWING, -30_deg, SWING_SPEED, 5);
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(17_in, 45, true);                  //approaching the balls slowly
-  chassis.pid_wait(); 
-  pros::delay(400);
-  chassis.pid_wait_quick_chain();
-
-  chassis.pid_drive_set(-17_in, 110, true);  
-  chassis.pid_wait();
-
-  chassis.pid_swing_set(ez::RIGHT_SWING, -120_deg, SWING_SPEED, 5);
-  chassis.pid_wait();
-  
-  chassis.pid_drive_set(26_in, 110, true);        //going towards the goal but doesn't face it
-  chassis.pid_wait();
-
-  chassis.pid_turn_set(180_deg, TURN_SPEED);
-  chassis.pid_wait();
-
-  piston.set(true);
-  chassis.pid_wait_quick_chain();
-
-  everything.move(65); 
-  chassis.pid_drive_set(25_in, 40, true);         //eating ballls from match loader
-  chassis.pid_wait();
- 
-  /**for (int i = 0; i < 5; i++)
-  {
-    chassis.pid_drive_set(-5_in, 70, true);         
-    chassis.pid_wait_quick_chain();
-    chassis.pid_drive_set(5_in, 70, true);         
-    chassis.pid_wait_quick_chain();
-  } */
-
-  chassis.pid_drive_set(-18_in, 110, true);
-  pros::delay(600);
-  chassis.pid_wait();
-
-  piston.set(false);
-  chassis.pid_wait_quick_chain();
-
-  chassis.pid_turn_set(0_deg, TURN_SPEED);
-  chassis.pid_wait();
-  
-  chassis.pid_drive_set(10_in, 110, true);                    //going close to the goal
-  chassis.pid_wait();
-  
-  in.move(0);
-  basket.move(0);
-  everything.move(0); 
-  chassis.pid_wait();
-
-  in.move(-127);
-  basket.move(-127);
   everything.move(127); 
+
+  chassis.pid_drive_set(21_in, 100, true); 
+  chassis.pid_wait_quick();
+
+  chassis.pid_swing_set(ez::LEFT_SWING, 72_deg, 127, 1);          //faces goal(65 deg)
+  chassis.pid_wait_quick();
+
+  in.move(90);
+  basket.move(-65);
+  chassis.pid_drive_set(9_in, 127, true);                      //d = 10
+  chassis.pid_wait();        
+  
+  everything.move(65); 
+  pros::delay(1000);                                              //550
+ 
+  in.move(-90); 
+  basket.move(90);
+  everything.move(90); 
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(-43_in, 127, true);                   //go back to the goal
+  chassis.pid_wait_quick();
+
+  chassis.pid_swing_set(ez::RIGHT_SWING, 205_deg, 127, -127);
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(16_in, 100, true);                    //gets match loader
   chassis.pid_wait();
 
-  pros::delay(20000);
-  chassis.pid_wait();
+  chassis.pid_drive_set(-15_in, 127, true);
+  chassis.pid_wait_quick();
 
+  chassis.pid_swing_set(ez::RIGHT_SWING, 21_deg, 127, -127);        //25 deg
+  chassis.pid_wait_quick();
+  
+  in.move(-127); 
+  basket.move(-127);
+  chassis.pid_drive_set(14_in, 127, true);
+  chassis.pid_wait_quick();
+
+  everything.move(127);  
+  chassis.pid_wait_quick();
+  pros::delay(150000);   
 }
 
 ///
 // Combining Turn + Drive
 ///
-void drive_and_turn() {
-
-  chassis.pid_turn_set(90_deg, TURN_SPEED);
-  chassis.pid_wait();
+void drive_and_turn() {                                 //NOTHING
+  wing.set(true);
+  chassis.pid_drive_set(5.5_in, 127, true);  
+  chassis.pid_wait_quick();
   
-  chassis.pid_turn_set(180_deg, TURN_SPEED);
-chassis.pid_wait();
-
-chassis.pid_turn_set(270_deg, TURN_SPEED);
-chassis.pid_wait();
-
-chassis.pid_turn_set(0_deg, TURN_SPEED);
-chassis.pid_wait();
-  
-
 }
 
 ///
 // Wait Until and Changing Max Speed
 ///
 void wait_until_change_speed() {        //skills right side
+
+  chassis.pid_targets_reset();                // Resets PID targets to 0
+  chassis.drive_imu_reset();                  // Reset gyro position to 0
+  chassis.drive_sensor_reset();               // Reset drive sensors to 0
+  chassis.odom_xyt_set(0_in, 0_in, 0_deg);    // Set the current position, you can start at a specific position with this
+  chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
+
+  pod.set(false);
   wing.set(true);
-  piston.set(false);
   in.move(-127); 
   basket.move(127);
   everything.move(127); 
 
-  chassis.pid_drive_set(20_in, 100, true);  
+  chassis.pid_drive_set(33_in, 127, true);  
   chassis.pid_wait_quick();
 
-  piston.set(true);
   chassis.pid_wait_quick();
 
-  chassis.pid_swing_set(ez::LEFT_SWING, 90_deg, SWING_SPEED, 5);
+  chassis.pid_swing_set(ez::LEFT_SWING, 90_deg, 127, -127);
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(13.5_in, 127, true);  
+  pros::delay(1100);
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(-10_in, 127, true);  
+  chassis.pid_wait_quick();
+
+  chassis.pid_swing_set(ez::RIGHT_SWING, 270_deg, 127, -35);     //-25(it barely touched the walls)
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(65_in, 100, true);              //crosses field
+  chassis.pid_wait();
+
+  chassis.pid_swing_set(ez::RIGHT_SWING, 180_deg, 127, 30);
+  chassis.pid_wait_quick();
+
+  chassis.pid_swing_set(ez::LEFT_SWING, 270_deg, 127, -35);
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(13.5_in, 127, true);    //second match loader
+  pros::delay(1100);
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(-15_in, 127, true);  
+  chassis.pid_wait_quick();
+
+  chassis.pid_swing_set(ez::LEFT_SWING, 90_deg, 127, -127);
+  chassis.pid_wait_quick();
+
+  in.move(-127); 
+  basket.move(-127);
+  chassis.pid_drive_set(13_in, 127, true); 
+  chassis.pid_wait_quick();
+
+  everything.move(127); 
+  pros::delay(6000);
+
+  chassis.pid_drive_set(-8_in, 127, true); 
+  chassis.pid_wait_quick();
+
+  chassis.pid_swing_set(ez::LEFT_SWING, 180_deg, 127, -127);
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(90_in, 100, true);                  //crosses filed on the other side
+  chassis.pid_wait(); 
+
+  chassis.pid_swing_set(ez::RIGHT_SWING, 270_deg, 127, -127);
+  chassis.pid_wait_quick();
+
+  basket.move(127);
+  chassis.pid_drive_set(15.5_in, 127, true);    //third match loader
+  pros::delay(1100);
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(-10_in, 127, true);   
+  chassis.pid_wait_quick();
+
+  chassis.pid_swing_set(ez::RIGHT_SWING, 90_deg, 127, -35);
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(62_in, 100, true);          //crosses field again
+  chassis.pid_wait();
+
+  chassis.pid_swing_set(ez::RIGHT_SWING, 0_deg, 127, 37);
+  chassis.pid_wait_quick();
+
+  chassis.pid_swing_set(ez::LEFT_SWING, 90_deg, 127, -30);
   chassis.pid_wait_quick();
   
+  chassis.pid_drive_set(10_in, 127, true);          //fourth match loader
+  pros::delay(1100);
+  chassis.pid_wait_quick();  
+
+  chassis.pid_drive_set(-15_in, 127, true); 
+  chassis.pid_wait_quick();
+
+  chassis.pid_swing_set(ez::RIGHT_SWING, 270_deg, 127, -127);
+  chassis.pid_wait_quick();
+
+  in.move(-127); 
+  basket.move(-127);
+  chassis.pid_drive_set(14_in, 127, true);   //faces match loader
+  chassis.pid_wait_quick();
+  everything.move(127); 
+  pros::delay(6000);
+
+  chassis.pid_drive_set(-10_in, 127, true); 
+  chassis.pid_wait_quick();
+  
+  chassis.pid_swing_set(ez::RIGHT_SWING, -20_deg, 127, -127);                 //park stage
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(45_in, 127, true); 
+  chassis.pid_wait_quick();
+
+  basket.move(127);
+  chassis.pid_swing_set(ez::RIGHT_SWING, 90_deg, 127, -127);                 
+  chassis.pid_wait_quick();
+
+  pod.set(true);
+  chassis.pid_drive_set(500_in, 127, true); 
+  chassis.pid_wait_quick();
+
+
+
+
+  
+  /** 
   chassis.pid_drive_set(12_in, 100, true);  
   chassis.pid_wait_quick();
-  pros::delay(1200);                                            // first match loader
+  pros::delay(1000);                                            // first match loader
 
   chassis.pid_drive_set(-15_in, 110, true);  
   chassis.pid_wait_quick();
@@ -257,7 +328,7 @@ void wait_until_change_speed() {        //skills right side
   chassis.pid_swing_set(ez::RIGHT_SWING, -90_deg, SWING_SPEED, 5);
   chassis.pid_wait_quick();
 
-  chassis.pid_drive_set(13_in, 80, true);       //15inch 
+  chassis.pid_drive_set(12_in, 80, true);       //15inch 
   chassis.pid_wait_quick();
   
   pros::delay(1200);                                    // second match loader                          
@@ -269,7 +340,7 @@ void wait_until_change_speed() {        //skills right side
   chassis.pid_wait_quick();
 
   chassis.pid_turn_set(90_deg, 80);
-  chassis.pid_wait();
+  chassis.pid_wait_quick();
 
   chassis.pid_drive_set(19_in, 60, true);  
   everything.move(127);
@@ -280,7 +351,7 @@ void wait_until_change_speed() {        //skills right side
   pros::delay(4000);
 
   chassis.pid_swing_set(ez::RIGHT_SWING, 175_deg, SWING_SPEED, 5);
-  chassis.pid_wait();
+  chassis.pid_wait_quick();
 
   chassis.pid_drive_set(50_in, 80, true);  
   chassis.pid_wait_quick();
@@ -298,10 +369,10 @@ void wait_until_change_speed() {        //skills right side
   basket.move(127);
   everything.move(127); 
 
-  chassis.pid_drive_set(23.5_in, 60, true);                    //third match loader     
+  chassis.pid_drive_set(22.5_in, 60, true);                    //third match loader     
   chassis.pid_wait_quick();
 
-  pros::delay(1200);
+  pros::delay(1100);
 
   chassis.pid_drive_set(-15_in, 110, true);
   chassis.pid_wait_quick();
@@ -324,7 +395,7 @@ void wait_until_change_speed() {        //skills right side
   chassis.pid_turn_set(90_deg, 110);
   chassis.pid_wait_quick();
 
-  chassis.pid_drive_set(24.5_in, 70, true);  
+  chassis.pid_drive_set(23.5_in, 70, true);  
   chassis.pid_wait_quick(); 
 
   pros::delay(1200);                                    // fourth match loader
@@ -333,7 +404,7 @@ void wait_until_change_speed() {        //skills right side
   chassis.pid_drive_set(-20_in, 70, true);  
   chassis.pid_wait_quick(); 
 
-  chassis.pid_turn_set(-98_deg, 90);                  //faces fourth goal
+  chassis.pid_turn_set(-96_deg, 90);                  //faces fourth goal
   piston.set(false);
   chassis.pid_wait_quick();
 
@@ -344,314 +415,117 @@ void wait_until_change_speed() {        //skills right side
 
   in.move(-127);
   pros::delay(4000);
-
-  everything.move(0);
-  basket.move(0);
-  in.move(0);
-  pod.set(true);
-  wing.set(false);
-  chassis.pid_wait_quick();
-
-  chassis.pid_drive_set(-10_in, 70, true);  
-  chassis.pid_wait_quick();
-
-  chassis.pid_turn_set(20_deg, 90);                  //faces parking zone
+  
+  
+  in.move(-127); 
+  basket.move(127);
+  everything.move(127); 
   piston.set(false);
+  pod.set(true);
   chassis.pid_wait_quick();
 
-  chassis.pid_drive_set(-15_in, 127, true);  
+  chassis.pid_swing_set(ez::LEFT_SWING, 180_deg, 90, 5);    //45 degrees     
   chassis.pid_wait_quick();
 
-  chassis.pid_drive_set(100_in, 127, true);  
+  chassis.pid_drive_set(-52_in, 100, true);  
+  chassis.pid_wait();
+
+  chassis.pid_swing_set(ez::RIGHT_SWING, 90_deg, 90, 5);    //45 degrees     
   chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(150_in, 127, true);  
+  chassis.pid_wait();
 
  
+*/
 
   pros::delay(1000000);
-
-
-  chassis.pid_turn_set(25_deg, 40);
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(16.5_in, 30, true);  
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(-10_in, 110, true);  
-  chassis.pid_wait();
-
-  chassis.pid_swing_set(ez::RIGHT_SWING, 100_deg, SWING_SPEED, 5);
-  chassis.pid_wait();
-  
-  chassis.pid_drive_set(34_in, 110, true);        //to the goal but not facing
-  chassis.pid_wait();
-
-  chassis.pid_turn_set(180_deg, TURN_SPEED);
-  chassis.pid_wait();
-
-  piston.set(true);
-  chassis.pid_wait_quick_chain();
-
-  chassis.pid_drive_set(21_in, 55, true);         //first time driving towards match loader
-  chassis.pid_wait();
-  pros::delay(1000);
-
-  chassis.pid_drive_set(-18_in, 110, true);  
-  chassis.pid_wait();
-
-  piston.set(false);
-  chassis.pid_wait_quick_chain();
-
-  chassis.pid_turn_set(0_deg, TURN_SPEED);
-  chassis.pid_wait();
-  
-  chassis.pid_drive_set(9_in, 90, true);                    //going close to the goal
-  chassis.pid_wait();
-
-  in.move(-127);
-  basket.move(-127);
-  everything.move(100); 
-  chassis.pid_wait();
-
-  pros::delay(5500);
-  chassis.pid_wait();
-  
-  in.move(0);
-  basket.move(0);
-  everything.move(0); 
-  chassis.pid_wait_quick();
-
-  chassis.pid_drive_set(-10_in, 110, true);
-  chassis.pid_wait();
-
-  chassis.pid_turn_set(-90_deg, TURN_SPEED);
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(15.5_in, 110, true);          //facing the left
-  chassis.pid_wait();
-
-  chassis.pid_swing_set(ez::LEFT_SWING, 0_deg, SWING_SPEED, 5);
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(70_in, 80, true);   
-  chassis.pid_wait_quick_chain();
-
-/** 
-  in.move(-127); 
-  basket.move(127);
-  everything.move(127); 
-  chassis.pid_wait();
-
-  
-  chassis.pid_turn_set(5_deg, TURN_SPEED);          //turns to get the far side balls
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(35_in, 30, true);   
-  chassis.pid_wait();
-  **/
-
-  chassis.pid_turn_set(90_deg, TURN_SPEED);
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(21_in, 100, true);             //second time driving towards goals but not facing it   
-  chassis.pid_wait();
-
-  in.move(-127);           
-  basket.move(127);
-  everything.move(127);
-  chassis.pid_wait();
-
-  piston.set(true);
-  chassis.pid_wait_quick_chain();
-
-  chassis.pid_turn_set(0_deg, TURN_SPEED);            //facing the match loaders
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(18_in, 65, true);               //getting into the match loaders
-  chassis.pid_wait();  
-
-  everything.move(127);
-  pros::delay(700);
-  chassis.pid_wait();
- 
-  chassis.pid_drive_set(-10_in, 70, true);         
-  chassis.pid_wait();
-  
-  chassis.pid_drive_set(10_in, 70, true);         
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(-18_in, 110, true);         //wiggles, still faces match loader
-  chassis.pid_wait();
-
-  piston.set(false);
-  chassis.pid_wait_quick_chain();
-
-  chassis.pid_turn_set(180_deg, TURN_SPEED);
-  chassis.pid_wait();
-  
-  chassis.pid_drive_set(10_in, 90, true);                    //going close to the goal
-  chassis.pid_wait();
-  
-  in.move(0);
-  basket.move(0);
-  everything.move(0); 
-  chassis.pid_wait();
-
-  in.move(-127);
-  basket.move(-127);
-  everything.move(127); 
-  chassis.pid_wait();
-
-  pros::delay(1200);
-  chassis.pid_wait();                             //SCORING makes ure that the balls are secured(the further side right in reference frame of the strting point)
-  
-  in.move(0);
-  basket.move(0);
-  everything.move(0); 
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(-15_in, 110, true);            //still faces the goal       
-  chassis.pid_wait();
-
-  chassis.pid_swing_set(ez::LEFT_SWING, -90_deg, SWING_SPEED, 5);      //faces the far right side
-  chassis.pid_wait();
-
-  in.move(-127); 
-  basket.move(127);
-  everything.move(127); 
-  chassis.pid_wait();                                   //anti jam the balls
-
-  in.move(0); 
-  basket.move(0);
-  everything.move(0); 
-  chassis.pid_wait_quick_chain();
-
-  chassis.pid_drive_set(55_in, 80, true);
-  chassis.pid_wait();
-
-  chassis.pid_turn_set(215_deg, TURN_SPEED);        //gets the far left balls in the left side
-  chassis.pid_wait();
-
-  in.move(-127); 
-  basket.move(127);
-  everything.move(127); 
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(20_in, 30, true);                            
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(-20_in, 30, true);                            
-  chassis.pid_wait();
-
-  chassis.pid_swing_set(ez::LEFT_SWING, 0_deg, SWING_SPEED, 5);      //faces far side left but it's on the left side
-  chassis.pid_wait();
-
-  in.move(0); 
-  basket.move(0);
-  everything.move(0); 
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(12_in, 40, true);
-  chassis.pid_wait();
-
-  chassis.pid_turn_set(-90_deg, TURN_SPEED);          
-  chassis.pid_wait();
-
-  chassis.pid_swing_set(ez::LEFT_SWING, 0_deg, SWING_SPEED, 5);      //faces the far left side
-  chassis.pid_wait();
-
-  piston.set(true);
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(30_in, 60, true);
-  chassis.pid_wait();
-
-
-
-
-
-
-
-
-  chassis.pid_swing_set(ez::LEFT_SWING, -90_deg, SWING_SPEED, 5);      //faces the far left side
-  chassis.pid_wait();
-  
-  piston.set(true);
-  chassis.pid_wait();
-
-  chassis.pid_turn_set(225_deg, TURN_SPEED);          //faces middle goal
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(38_in, 40, true);                            
-  chassis.pid_wait();
-
-  in.move(68);                                       //score middle goal
-  basket.move(-68);
-  everything.move(68); 
-
-  pros::delay(4200);
-  chassis.pid_wait();
-
-  in.move(-127); 
-  basket.move(127);
-  everything.move(127); 
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(-10_in, 100, true);        
-  chassis.pid_wait_quick_chain();
-
-  chassis.pid_turn_set(135_deg, TURN_SPEED);          //faces lower goal
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(10_in, 100, true);        
-  chassis.pid_wait_quick_chain();
-
-  chassis.pid_drive_set(30_in, 30, true);           //drive towards lower goal 
-  chassis.pid_wait();
-
-
-
-
-  
-
 }
 
-///
-// Swing Example
-///
-void swing_example() {
-  chassis.pid_drive_set(10_in, DRIVE_SPEED, true);
+
+
+void swing_example() {                              //left side non split seven bloacks
+
+  chassis.pid_targets_reset();                // Resets PID targets to 0
+  chassis.drive_imu_reset();                  // Reset gyro position to 0
+  chassis.drive_sensor_reset();               // Reset drive sensors to 0
+  chassis.odom_xyt_set(0_in, 0_in, 0_deg);    // Set the current position, you can start at a specific position with this
+  chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
+  
+  wing.set(true);
+  in.move(-127); 
+  basket.move(127);
+  everything.move(127); 
+
+  chassis.pid_drive_set(22_in, 100, true); 
+  chassis.pid_wait_quick();
+
+  chassis.pid_swing_set(ez::LEFT_SWING, 70_deg, 127, 1);          
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(-35_in, 127, true);                   //go back to the goal
+  chassis.pid_wait_quick();
+
+  chassis.pid_swing_set(ez::RIGHT_SWING, 210_deg, 127, -127);
+  chassis.pid_wait_quick();
+  
+  in.move(-100); 
+  basket.move(100);
+  everything.move(100);
+
+  chassis.pid_drive_set(14_in, 100, true);                    //gets match loader
   chassis.pid_wait();
 
-/** 
-  chassis.pid_turn_set(45_deg, TURN_SPEED);
-  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(-15_in, 127, true);
+  chassis.pid_wait_quick();
+
+  chassis.pid_swing_set(ez::RIGHT_SWING, 20_deg, 127, -127);        //25 deg
+  chassis.pid_wait_quick();
+  
+  in.move(-127); 
+  basket.move(-127);
+  chassis.pid_drive_set(13_in, 127, true);
+  chassis.pid_wait_quick();
+
+  everything.move(127);  
+  chassis.pid_wait_quick();
+  pros::delay(15000);  
+  
+  /** 
+  chassis.pid_drive_set(-9_in, 127, true);
+  chassis.pid_wait_quick();
+
+  chassis.pid_swing_set(ez::LEFT_SWING, -35_deg, 127, -127);        
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(17_in, 127, true);
+  chassis.pid_wait_quick();
+
+  wing.set(false);   
+  chassis.pid_swing_set(ez::LEFT_SWING, 22_deg, 127, -127);     
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(20_in, 127, true);
+  chassis.pid_wait_quick(); 
   */
 
-
+  
 }
 
 ///
 // Motion Chaining
 ///
-void motion_chaining() {
-  // Motion chaining is where motions all try to blend together instead of individual movements.
-  // This works by exiting while the robot is still moving a little bit.
-  // To use this, replace pid_wait with pid_wait_quick_chain.
-  chassis.pid_drive_set(24_in, DRIVE_SPEED, true);
+void motion_chaining() {              //odom
+
+  chassis.pid_targets_reset();                // Resets PID targets to 0
+  chassis.drive_imu_reset();                  // Reset gyro position to 0
+  chassis.drive_sensor_reset();               // Reset drive sensors to 0
+  chassis.odom_xyt_set(0_in, 0_in, 0_deg);    // Set the current position, you can start at a specific position with this
+  chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
+  
+  chassis.pid_odom_set(24_in, 110, true);
   chassis.pid_wait();
 
-  chassis.pid_turn_set(45_deg, TURN_SPEED);
-  chassis.pid_wait_quick_chain();
-
-  chassis.pid_turn_set(-45_deg, TURN_SPEED);
-  chassis.pid_wait_quick_chain();
-
-  chassis.pid_turn_set(0_deg, TURN_SPEED);
-  chassis.pid_wait();
-
-  // Your final motion should still be a normal pid_wait
-  chassis.pid_drive_set(-24_in, DRIVE_SPEED, true);
-  chassis.pid_wait();
 }
 
 ///

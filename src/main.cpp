@@ -8,20 +8,21 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {11, -12, -13},     // Left Chassis Ports (negative port will reverse it!)
-    {18, 19, -20},  // Right Chassis Ports (negative port will reverse it!)
+    {-18, -19, -20},     // Left Chassis Ports (negative port will reverse it!)
+    {11, 12, 13},  // Right Chassis Ports (negative port will reverse it!)
 
-    17,      // IMU Port
+    5,      // IMU Port
     3.25,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
-    480);   // Wheel RPM = cartridge * (motor gear / wheel gear)
+    450);   // Wheel RPM = cartridge * (motor gear / wheel gear)
 
 // Uncomment the trackers you're using here!
 // - `8` and `9` are smart ports (making these negative will reverse the sensor)
 //  - you should get positive values on the encoders going FORWARD and RIGHT
 // - `2.75` is the wheel diameter
 // - `4.0` is the distance from the center of the wheel to the center of the robot
-ez::tracking_wheel horiz_tracker(8, 2.75, 3.16);  // This tracking wheel is perpendicular to the drive wheels(port, wheeldiameter, distance from the center of the wheel to the center of the robot)
-ez::tracking_wheel vert_tracker(9, 2, 0.26);   // This tracking wheel is parallel to the drive wheels
+
+// ez::tracking_wheel horiz_tracker(-8, 2.75, 3.16);  // This tracking wheel is perpendicular to the drive wheels(port, wheeldiameter, distance from the center of the wheel to the center of the robot)
+ez::tracking_wheel vert_tracker(-9, 2, 0.26);   // This tracking wheel is parallel to the drive wheels
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -38,7 +39,9 @@ void initialize() {
   // Look at your horizontal tracking wheel and decide if it's in front of the midline of your robot or behind it
   //  - change `back` to `front` if the tracking wheel is in front of the midline
   //  - ignore this if you aren't using a horizontal tracker
-  chassis.odom_tracker_back_set(&horiz_tracker);
+  
+  //chassis.odom_tracker_back_set(&horiz_tracker);
+  
   // Look at your vertical tracking wheel and decide if it's to the left or right of the center of the robot
   //  - change `left` to `right` if the tracking wheel is to the right of the centerline
   //  - ignore this if you aren't using a vertical tracker
@@ -58,12 +61,12 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"skills right side", wait_until_change_speed},
-      {"Right side", drive_example},
-      {"Left side", turn_example},
-      {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
-      {"Swing Turn\n\nSwing in an 'S' curve", swing_example},
-      {"Motion Chaining\n\nDrive forward, turn, and come back, but blend everything together :D", motion_chaining},
+      {"odom", motion_chaining},
+      {"Right Side Split", drive_example},
+      {"Left Side Split", turn_example},
+      {"Skills Right Side", wait_until_change_speed},
+      {"Left Side Non-Split", swing_example},
+      {"NOTHING", drive_and_turn},
       {"Combine all 3 movements", combining_movements},
       {"Interference\n\nAfter driving forward, robot performs differently if interfered or not", interfered_example},
       {"Simple Odom\n\nThis is the same as the drive example, but it uses odom instead!", odom_drive_example},
@@ -234,7 +237,7 @@ void ez_template_extras() {
  * control mode.
  *
  * If no competition control is connected, this function will run immediately
- * following initialize().
+ * following initialize().  
  *
  * If the robot is disabled or communications is lost, the
  * operator control task will be stopped. Re-enabling the robot will restart the
@@ -253,7 +256,6 @@ void opcontrol()
     chassis.opcontrol_tank();  // Tank control
 
     wing.button_toggle(master.get_digital(DIGITAL_B));
-    piston.button_toggle(master.get_digital(DIGITAL_DOWN));
     pod.button_toggle(master.get_digital(DIGITAL_LEFT));
 
 
@@ -261,30 +263,32 @@ void opcontrol()
     {
       l1 = !(l1);
     }
-    else if(l1)
+    else if(l1)                                                     //intake mmode         
     {
-      in.move(-127); 
-      basket.move(127);
-      everything.move(127);  
+      intakeLeft.move(127);
+      intakeRight.move(127);
     }
     else 
-    if(master.get_digital(DIGITAL_R1))
+    if(master.get_digital(DIGITAL_R1))                                //long goal
     {
-      in.move(-127);
-      basket.move(-127);
-      everything.move(127);    
+      intakeLeft.move(127);
+      intakeRight.move(127);
+
+      tripleUp.set(true);
+      tripleDown.set(true);   
     }
-    else if(master.get_digital(DIGITAL_R2))
-    {
-      in.move(127);
-      basket.move(-127);
-      everything.move(127);    
+    else if(master.get_digital(DIGITAL_R2))                           //mid goal mode
+    {   
+      intakeLeft.move(105);
+      intakeRight.move(105);
+      
+      tripleUp.set(false);
+      tripleDown.set(false); 
     } 
-    else if(master.get_digital(DIGITAL_L2))
+    else if(master.get_digital(DIGITAL_L2))                               //outtake mode
     {
-      in.move(0); 
-      basket.move(-127);
-      everything.move(-127); 
+      intakeLeft.move(-127);
+      intakeRight.move(-127);
     }
     else if(master.get_digital(DIGITAL_Y))
     {
@@ -300,9 +304,11 @@ void opcontrol()
     }
     else
     {
-      in.move(0);
-      basket.move(0);
-      everything.move(0);
+      intakeLeft.move(0);
+      intakeRight.move(0);
+
+      tripleUp.set(true);
+      tripleDown.set(false); 
     }
     pros::delay(ez::util::DELAY_TIME);
 }
