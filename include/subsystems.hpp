@@ -28,7 +28,8 @@ void intake_opcontrol();
 
 inline ez::Piston tripleDown('H', true); 
 inline ez::Piston tripleUp('G', true); 
+inline ez::Piston matchLoad('F', true); 
+inline ez::Piston wing('D', false); 
+inline ez::Piston odomPull('E', true); 
 
-
-inline ez::Piston wing('A', false); 
 inline ez::Piston pod('B', false); 

@@ -244,6 +244,8 @@ void ez_template_extras() {
  * task, not resume it from where it left off.
  */
 bool l1 = false;
+bool o1 = false;
+
 void opcontrol() 
 {
   
@@ -252,13 +254,22 @@ void opcontrol()
   while (true) 
   {
     ez_template_extras();
-
     chassis.opcontrol_tank();  // Tank control
 
-    wing.button_toggle(master.get_digital(DIGITAL_B));
     pod.button_toggle(master.get_digital(DIGITAL_LEFT));
+    matchLoad.button_toggle(master.get_digital(DIGITAL_DOWN));
 
-
+    if(master.get_digital_new_press(DIGITAL_UP))
+    {
+      o1 = !(o1);
+    }
+    else if(o1)                                                     //odom pull         
+    {
+      tripleUp.set(false);
+      tripleDown.set(false);  
+    }
+    else
+      
     if(master.get_digital_new_press(DIGITAL_L1))
     {
       l1 = !(l1);
@@ -268,7 +279,8 @@ void opcontrol()
       intakeLeft.move(127);
       intakeRight.move(127);
     }
-    else 
+    else
+
     if(master.get_digital(DIGITAL_R1))                                //long goal
     {
       intakeLeft.move(127);
@@ -290,6 +302,10 @@ void opcontrol()
       intakeLeft.move(-127);
       intakeRight.move(-127);
     }
+    else if(master.get_digital(DIGITAL_B))                               
+    {
+      wing.set(true);
+    }
     else if(master.get_digital(DIGITAL_Y))
     {
       in.move(60);
@@ -309,6 +325,7 @@ void opcontrol()
 
       tripleUp.set(true);
       tripleDown.set(false); 
+      wing.set(false);
     }
     pros::delay(ez::util::DELAY_TIME);
 }
