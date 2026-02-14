@@ -86,6 +86,8 @@ void turn_example() {                 //left side split
   wing.set(false);
   intakeLeft.move(127);
   intakeRight.move(127);
+  tripleUp.set(true);
+  tripleDown.set(false);
   
   chassis.pid_drive_set(26_in, 110, true); 
   pros::delay(380);
@@ -119,7 +121,7 @@ void turn_example() {                 //left side split
   tripleUp.set(true);
   tripleDown.set(true);
   chassis.pid_drive_set(-5_in, 110, true); 
-  pros::delay(1200);
+  pros::delay(950);
   tripleUp.set(true);
   tripleDown.set(false); 
   chassis.pid_wait_quick();
@@ -132,14 +134,33 @@ void turn_example() {                 //left side split
   
   chassis.pid_drive_set(32_in, 110, true);
   pros::delay(1300);
-  chassis.pid_drive_set(-15_in, 110, true);
+  chassis.pid_drive_set(-14_in, 110, true);
   chassis.pid_wait_quick();
 
-  chassis.pid_turn_set(60_deg, 110);
+  chassis.pid_turn_set(50_deg, 110);
   chassis.pid_wait_quick();
 
-  chassis.pid_drive_set(-48_in, 110, true);
+  chassis.pid_drive_set(-52_in, 110, true);
   chassis.pid_wait_quick();
+
+  tripleUp.set(false);
+  tripleDown.set(false);
+  pros::delay(800);
+  tripleUp.set(true);
+  tripleDown.set(false); 
+  matchLoad.set(false);
+  wing.set(true);
+
+  chassis.pid_drive_set(35_in, 110, true);
+  chassis.pid_wait_quick();
+
+  chassis.pid_turn_set(0_deg, 110);
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(-18_in, 110, true);
+  chassis.pid_wait_quick();
+
+
   
 }
 
@@ -168,6 +189,8 @@ void wait_until_change_speed() {        //skills left side
   wing.set(false);
   intakeLeft.move(127);
   intakeRight.move(127);
+  tripleUp.set(true);
+  tripleDown.set(false);
   
   chassis.pid_drive_set(26_in, 110, true); 
   pros::delay(380);
@@ -201,7 +224,7 @@ void wait_until_change_speed() {        //skills left side
   tripleUp.set(true);
   tripleDown.set(true);
   chassis.pid_drive_set(-5_in, 110, true); 
-  pros::delay(1200);
+  pros::delay(950);
   tripleUp.set(true);
   tripleDown.set(false); 
   chassis.pid_wait_quick();
@@ -213,15 +236,25 @@ void wait_until_change_speed() {        //skills left side
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
   
   chassis.pid_drive_set(32_in, 110, true);
-  pros::delay(1800);
-  chassis.pid_drive_set(-15_in, 110, true);
+  pros::delay(1300);
+  chassis.pid_drive_set(-14_in, 110, true);
   chassis.pid_wait_quick();
 
-  chassis.pid_turn_set(60_deg, 110);
+  chassis.pid_turn_set(50_deg, 110);
   chassis.pid_wait_quick();
 
-  chassis.pid_drive_set(-48_in, 110, true);
+  chassis.pid_drive_set(-52_in, 110, true);
   chassis.pid_wait_quick();
+
+  tripleUp.set(false);
+  tripleDown.set(false);
+  pros::delay(800);
+  tripleUp.set(true);
+  tripleDown.set(false); 
+  matchLoad.set(false);
+  wing.set(true);
+
+  
 }
 
 
