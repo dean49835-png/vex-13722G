@@ -14,11 +14,14 @@ const int SWING_SPEED = 127;            //speed: 110
 // Constants
 ///
 void default_constants() {
-  // P, I, D, and Start I
-  chassis.pid_drive_constants_set(8.0, 0.0, 28.0);            //4 0 1     change k and d Fwd/rev constants, used for odom and non odom motions
-  chassis.pid_heading_constants_set(3.0, 0.0, 20.0);        // Holds the robot straight while going forward without odom
-  chassis.pid_turn_constants_set(4.0, 0.05, 93.0, 15.0);     //2.0, 0.05, 60.0, 15.0           p i d angle. Turn in place constants
-  chassis.pid_swing_constants_set(6.0, 0.0, 65.0);           // Swing constants
+  // P, I, D, and Start I 
+  //11 0 10     change k and d Fwd/rev constants, used for odom and non odom motions
+  chassis.pid_drive_constants_forward_set(7.0, 0.0, 32.0);           //6 0 2 
+  chassis.pid_drive_constants_backward_set(7.0, 0.0, 32.0);           //9 0 12
+
+  chassis.pid_heading_constants_set(3.0, 0.0, 20.0);        //Holds the robot straight while going forward without odom
+  chassis.pid_turn_constants_set(3.0, 0.05, 20.0, 15.0);     // p i d start_i 3.0, 0.05, 20.0, 15.0           p i d angle. Turn in place constants
+  chassis.pid_swing_constants_set(3.0, 0.0, 27.0);           // Swing constants
   chassis.pid_odom_angular_constants_set(6.5, 0.0, 52.5);    // Angular control for odom motions
   chassis.pid_odom_boomerang_constants_set(5.8, 0.0, 32.5);  // Angular control for boomerang motions
 
@@ -53,53 +56,18 @@ void default_constants() {
 ///
 void drive_example()               //right side auto split
 {
+  
   chassis.pid_targets_reset();                // Resets PID targets to 0
   chassis.drive_imu_reset();                  // Reset gyro position to 0
   chassis.drive_sensor_reset();               // Reset drive sensors to 0
-  chassis.odom_xyt_set(0_in, 0_in, 0_deg);    // Set the current position, you can start at a specific position with this
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
+  chassis.odom_theta_set(0); 
   
-  wing.set(true);
-  in.move(127); 
-  basket.move(127);
-  everything.move(127); 
+  chassis.pid_swing_set(ez::LEFT_SWING, 90_deg, -10, -110);
+  chassis.pid_wait_quick(); 
 
-  chassis.pid_drive_set(20_in, 127, true); 
-  chassis.pid_wait_quick();
+  
 
-  chassis.pid_swing_set(ez::RIGHT_SWING, -70_deg, 127, -30);          //faces bottom goal
-  chassis.pid_wait_quick();
-
-  everything.move(-100); 
-  chassis.pid_drive_set(11_in, 127, true); 
-  in.move(0); 
-  basket.move(-100); 
-  pros::delay(1000);                              
-  chassis.pid_wait();
-
-  in.move(90); 
-  basket.move(90);
-  everything.move(90);
-  chassis.pid_drive_set(-47_in, 127, true); 
-  chassis.pid_wait_quick();
-
-  chassis.pid_swing_set(ez::LEFT_SWING, 150_deg, 127, -120);          
-  chassis.pid_wait_quick();
-
-  chassis.pid_drive_set(13_in, 127, true);                        //match laoaders
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(-20_in, 127, true); 
-  chassis.pid_wait_quick();
-
-  chassis.pid_swing_set(ez::LEFT_SWING, -25_deg, 127, -120);          
-  chassis.pid_wait_quick();
-
-  in.move(-127); 
-  basket.move(-127);
-  chassis.pid_drive_set(10_in, 127, true); 
-  everything.move(127);
-  pros::delay(150000);
 }
 
 ///
@@ -114,53 +82,58 @@ void turn_example() {                 //left side split
   chassis.odom_xyt_set(0_in, 0_in, 0_deg);    // Set the current position, you can start at a specific position with this
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
   
-  wing.set(true);
-  in.move(-127); 
-  basket.move(127);
-  everything.move(127); 
-
-  chassis.pid_drive_set(21_in, 100, true); 
-  chassis.pid_wait_quick();
-
-  chassis.pid_swing_set(ez::LEFT_SWING, 72_deg, 127, 1);          //faces goal(65 deg)
-  chassis.pid_wait_quick();
-
-  in.move(90);
-  basket.move(-65);
-  chassis.pid_drive_set(9_in, 127, true);                      //d = 10
-  chassis.pid_wait();        
+  matchLoad.set(false);
+  wing.set(false);
+  intakeLeft.move(127);
+  intakeRight.move(127);
   
-  everything.move(65); 
-  pros::delay(1000);                                              //550
- 
-  in.move(-90); 
-  basket.move(90);
-  everything.move(90); 
+  chassis.pid_drive_set(26_in, 110, true); 
+  pros::delay(380);
+  matchLoad.set(true); 
   chassis.pid_wait_quick();
 
-  chassis.pid_drive_set(-43_in, 127, true);                   //go back to the goal
+  chassis.pid_turn_set(-25_deg, 110);  
+  pros::delay(100);
+  matchLoad.set(false); 
   chassis.pid_wait_quick();
 
-  chassis.pid_swing_set(ez::RIGHT_SWING, 205_deg, 127, -127);
+  chassis.pid_drive_set(26_in, 110, true);  
+  pros::delay(450);
+  matchLoad.set(true); 
+  pros::delay(700);
+  chassis.pid_drive_set(-10_in, 110, true); 
+  chassis.pid_wait_quick(); 
+
+  chassis.pid_turn_set(25_deg, 110);
+  chassis.pid_wait_quick(); 
+  chassis.pid_drive_set(-15_in, 110, true); 
+  chassis.pid_wait_quick();
+  chassis.pid_turn_set(115_deg, 110);
+  chassis.pid_wait_quick(); 
+
+  chassis.pid_drive_set(-10_in, 110, true); 
+  pros::delay(500);
+  chassis.pid_swing_set(ez::LEFT_SWING, 205_deg, -10, -110);
+  pros::delay(700);
+
+  chassis.pid_drive_set(-5_in, 110, true); 
+  pros::delay(100);
+  intakeLeft.move(127);
+  intakeRight.move(127);
+  tripleUp.set(true);
+  tripleDown.set(true);
+  pros::delay(1600);
+  tripleUp.set(true);
+  tripleDown.set(false); 
   chassis.pid_wait_quick();
 
-  chassis.pid_drive_set(16_in, 100, true);                    //gets match loader
-  chassis.pid_wait();
-
-  chassis.pid_drive_set(-15_in, 127, true);
-  chassis.pid_wait_quick();
-
-  chassis.pid_swing_set(ez::RIGHT_SWING, 21_deg, 127, -127);        //25 deg
-  chassis.pid_wait_quick();
+  chassis.pid_targets_reset();                // Resets PID targets to 0
+  chassis.drive_imu_reset();                  // Reset gyro position to 0
+  chassis.drive_sensor_reset();               // Reset drive sensors to 0
+  chassis.odom_xyt_set(0_in, 0_in, 0_deg);    // Set the current position, you can start at a specific position with this
+  chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
   
-  in.move(-127); 
-  basket.move(-127);
-  chassis.pid_drive_set(14_in, 127, true);
-  chassis.pid_wait_quick();
-
-  everything.move(127);  
-  chassis.pid_wait_quick();
-  pros::delay(150000);   
+  
 }
 
 ///

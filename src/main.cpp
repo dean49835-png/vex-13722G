@@ -22,7 +22,7 @@ ez::Drive chassis(
 // - `4.0` is the distance from the center of the wheel to the center of the robot
 
 // ez::tracking_wheel horiz_tracker(-8, 2.75, 3.16);  // This tracking wheel is perpendicular to the drive wheels(port, wheeldiameter, distance from the center of the wheel to the center of the robot)
-ez::tracking_wheel vert_tracker(-9, 2, 0.26);   // This tracking wheel is parallel to the drive wheels
+ez::tracking_wheel vert_tracker(17, 2, 1.15);   // This tracking wheel is parallel to the drive wheels
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -45,7 +45,7 @@ void initialize() {
   // Look at your vertical tracking wheel and decide if it's to the left or right of the center of the robot
   //  - change `left` to `right` if the tracking wheel is to the right of the centerline
   //  - ignore this if you aren't using a vertical tracker
-  chassis.odom_tracker_left_set(&vert_tracker);
+  chassis.odom_tracker_right_set(&vert_tracker);
 
   // Configure your chassis controls
   chassis.opcontrol_curve_buttons_toggle(true);   // Enables modifying the controller curve with buttons on the joysticks
@@ -61,9 +61,9 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"odom", motion_chaining},
-      {"Right Side Split", drive_example},
       {"Left Side Split", turn_example},
+      {"Right Side Split", drive_example},
+      {"odom", motion_chaining},
       {"Skills Right Side", wait_until_change_speed},
       {"Left Side Non-Split", swing_example},
       {"NOTHING", drive_and_turn},
@@ -256,20 +256,9 @@ void opcontrol()
     ez_template_extras();
     chassis.opcontrol_tank();  // Tank control
 
-    pod.button_toggle(master.get_digital(DIGITAL_LEFT));
     matchLoad.button_toggle(master.get_digital(DIGITAL_DOWN));
-
-    if(master.get_digital_new_press(DIGITAL_UP))
-    {
-      o1 = !(o1);
-    }
-    else if(o1)                                                     //odom pull         
-    {
-      tripleUp.set(false);
-      tripleDown.set(false);  
-    }
-    else
-      
+    middleDescore.button_toggle(master.get_digital(DIGITAL_RIGHT));
+    
     if(master.get_digital_new_press(DIGITAL_L1))
     {
       l1 = !(l1);
@@ -291,8 +280,8 @@ void opcontrol()
     }
     else if(master.get_digital(DIGITAL_R2))                           //mid goal mode
     {   
-      intakeLeft.move(105);
-      intakeRight.move(105);
+      intakeLeft.move(127);
+      intakeRight.move(127);
       
       tripleUp.set(false);
       tripleDown.set(false); 
@@ -306,18 +295,7 @@ void opcontrol()
     {
       wing.set(true);
     }
-    else if(master.get_digital(DIGITAL_Y))
-    {
-      in.move(60);
-      basket.move(-60);
-      everything.move(60); 
-    }
-    else if(master.get_digital(DIGITAL_RIGHT))
-    {
-      in.move(0); 
-      basket.move(-90);
-      everything.move(-90); 
-    }
+      
     else
     {
       intakeLeft.move(0);
