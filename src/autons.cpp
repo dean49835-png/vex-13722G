@@ -329,15 +329,17 @@ void wait_until_change_speed() {        //skills, but starts from left side
   pros::delay(2200);
 
   chassis.pid_drive_set(-16_in, 110, true);
+  intakeLeft.move(0);
+  intakeRight.move(0);
   chassis.pid_wait_quick();
 
-  chassis.pid_turn_set(24_deg, 110);
+  chassis.pid_turn_set(22_deg, 110);
   chassis.pid_wait_quick();
 
   chassis.pid_drive_set(-18_in, 110, true);
   chassis.pid_wait_quick();
   
-  chassis.pid_turn_set(-24_deg, 110);
+  chassis.pid_turn_set(155_deg, 110);
   chassis.pid_wait_quick();
 
   matchLoad.set(false);
@@ -353,6 +355,8 @@ void wait_until_change_speed() {        //skills, but starts from left side
   chassis.pid_turn_set(155_deg, 110);
   chassis.pid_wait_quick();
 
+  intakeLeft.move(127);
+  intakeRight.move(127);
   chassis.pid_drive_set(-12_in, 110, true);
   pros::delay(900);
 
@@ -372,7 +376,7 @@ void wait_until_change_speed() {        //skills, but starts from left side
   tripleUp.set(true);
   tripleDown.set(true);
   pros::delay(1700);
-  chassis.pid_drive_set(15_in, 110, true);
+  chassis.pid_drive_set(20_in, 110, true);
   chassis.pid_wait_quick();
 
   matchLoad.set(false);
