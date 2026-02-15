@@ -312,18 +312,82 @@ void wait_until_change_speed() {        //skills, but starts from left side
   chassis.pid_turn_set(63_deg, 110);
   chassis.pid_wait_quick();
 
-  chassis.pid_drive_set(-86_in, 110, true);
+  intakeLeft.move(0);
+  intakeRight.move(0);
+  chassis.pid_drive_set(-93_in, 110, true);
   chassis.pid_wait_quick();
 
   matchLoad.set(true);
-  chassis.pid_turn_set(25_deg, 110);
+  intakeLeft.move(127);
+  intakeRight.move(127);
+  chassis.pid_turn_set(-24_deg, 110);               //faces match loader
   chassis.pid_wait_quick();
+
+  tripleUp.set(true);
+  tripleDown.set(false); 
+  chassis.pid_drive_set(19_in, 110, true);      //세번째 메치로더
+  pros::delay(2200);
+
+  chassis.pid_drive_set(-16_in, 110, true);
+  chassis.pid_wait_quick();
+
+  chassis.pid_turn_set(24_deg, 110);
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(-18_in, 110, true);
+  chassis.pid_wait_quick();
+  
+  chassis.pid_turn_set(-24_deg, 110);
+  chassis.pid_wait_quick();
+
+  matchLoad.set(false);
+  chassis.pid_drive_set(-65_in, 110, true);
+  chassis.pid_wait_quick();
+
+  chassis.pid_turn_set(63_deg, 110);
+  chassis.pid_wait_quick();
+  
+  chassis.pid_drive_set(12_in, 110, true);
+  chassis.pid_wait_quick();
+
+  chassis.pid_turn_set(155_deg, 110);
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(-12_in, 110, true);
+  pros::delay(900);
+
+  tripleUp.set(true);
+  tripleDown.set(true); 
+  intakeLeft.move(127);
+  intakeRight.move(127);
+  pros::delay(1000);      //애가 스코어시간임 마지막
+  chassis.pid_wait_quick();
+
+  tripleDown.set(false);
+  matchLoad.set(true); 
+  chassis.pid_drive_set(31_in, 110, true);
+  pros::delay(2200);
+  chassis.pid_drive_set(-31_in, 110, true);
+  pros::delay(800);
+  tripleUp.set(true);
+  tripleDown.set(true);
+  pros::delay(1700);
+  chassis.pid_drive_set(15_in, 110, true);
+  chassis.pid_wait_quick();
+
+  matchLoad.set(false);
+  chassis.pid_turn_set(63_deg, 110);
+  chassis.pid_wait_quick();
+  
+
+
+
 
 }
 
 
 
-void swing_example() {                              
+void swing_example() {                  // do not use                   
 
   chassis.pid_targets_reset();                // Resets PID targets to 0
   chassis.drive_imu_reset();                  // Reset gyro position to 0
@@ -404,7 +468,7 @@ void motion_chaining() {              //odom
   
   chassis.pid_drive_set(20_in, 110, true);
   chassis.pid_wait();
-  chassis.pid_turn_set(65_deg, 110);
+  chassis.pid_turn_set(155_deg, 110);
   chassis.pid_wait();
 
 }
