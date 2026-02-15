@@ -54,20 +54,76 @@ void default_constants() {
 ///
 // Drive Example
 ///
-void drive_example()               //right side auto split
+void drive_example()               //right side 7 bloacks
 {
-  
   chassis.pid_targets_reset();                // Resets PID targets to 0
   chassis.drive_imu_reset();                  // Reset gyro position to 0
   chassis.drive_sensor_reset();               // Reset drive sensors to 0
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
   chassis.odom_theta_set(0); 
   
-  chassis.pid_swing_set(ez::LEFT_SWING, 90_deg, -10, -110);
-  chassis.pid_wait_quick(); 
+  matchLoad.set(false);
+  wing.set(true);
+  intakeLeft.move(127);
+  intakeRight.move(127);
+  tripleUp.set(true);
+  tripleDown.set(false);
+
+  chassis.pid_drive_set(26_in, 110, true); 
+  pros::delay(380);
+  matchLoad.set(true); 
+  chassis.pid_wait_quick();
+
+  chassis.pid_turn_set(100_deg, 110);  
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(36_in, 110, true);
+  chassis.pid_wait_quick();
+
+  chassis.pid_turn_set(155_deg, 110);  
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(-20_in, 110, true);
+  pros::delay(700);
+
+  tripleUp.set(true);
+  tripleDown.set(true); 
+  pros::delay(1300);      //애가 스코어시간임
+  tripleDown.set(false);
+  chassis.pid_drive_set(31_in, 110, true);
+  pros::delay(1200);
+  chassis.pid_drive_set(-31_in, 110, true);
+  pros::delay(400);
+  tripleUp.set(true);
+  tripleDown.set(true); 
+  chassis.pid_wait_quick();
+
+  chassis.pid_targets_reset();                // Resets PID targets to 0
+  chassis.drive_imu_reset();                  // Reset gyro position to 0
+  chassis.drive_sensor_reset();               // Reset drive sensors to 0
+  chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
+  chassis.odom_theta_set(0); 
+  intakeLeft.move(0);
+  intakeRight.move(0);
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(15_in, 110, true);
+  chassis.pid_wait_quick();
+
+  chassis.pid_turn_set(40_deg, 110);
+  wing.set(false); 
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(-17_in, 110, true);
+  chassis.pid_wait_quick();
+
+  chassis.pid_turn_set(0_deg, 110);
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(-15_in, 60, true);
+  chassis.pid_wait_quick();
 
   
-
 }
 
 ///
@@ -116,7 +172,7 @@ void turn_example() {                 //left side split
   chassis.pid_drive_set(-10_in, 110, true); 
   pros::delay(500);
   chassis.pid_swing_set(ez::LEFT_SWING, 205_deg, -30, -110);
-  pros::delay(900);
+  pros::delay(1000);
 
   tripleUp.set(true);
   tripleDown.set(true);
@@ -143,25 +199,14 @@ void turn_example() {                 //left side split
   chassis.pid_drive_set(-52_in, 110, true);
   chassis.pid_wait_quick();
 
+  
+  intakeLeft.move(90);
+  intakeRight.move(90);
   tripleUp.set(false);
   tripleDown.set(false);
-  pros::delay(800);
-  tripleUp.set(true);
-  tripleDown.set(false); 
-  matchLoad.set(false);
-  wing.set(true);
-
-  chassis.pid_drive_set(35_in, 110, true);
+  pros::delay(1300);
   chassis.pid_wait_quick();
 
-  chassis.pid_turn_set(0_deg, 110);
-  chassis.pid_wait_quick();
-
-  chassis.pid_drive_set(-18_in, 110, true);
-  chassis.pid_wait_quick();
-
-
-  
 }
 
 ///
@@ -224,7 +269,7 @@ void wait_until_change_speed() {        //skills left side
   tripleUp.set(true);
   tripleDown.set(true);
   chassis.pid_drive_set(-5_in, 110, true); 
-  pros::delay(950);
+  pros::delay(1100);
   tripleUp.set(true);
   tripleDown.set(false); 
   chassis.pid_wait_quick();
@@ -242,7 +287,9 @@ void wait_until_change_speed() {        //skills left side
 
   chassis.pid_turn_set(50_deg, 110);
   chassis.pid_wait_quick();
-
+  
+  intakeLeft.move(90);
+  intakeRight.move(90);
   chassis.pid_drive_set(-52_in, 110, true);
   chassis.pid_wait_quick();
 
@@ -254,12 +301,12 @@ void wait_until_change_speed() {        //skills left side
   matchLoad.set(false);
   wing.set(true);
 
-  
+
 }
 
 
 
-void swing_example() {                              //left side non split seven bloacks
+void swing_example() {                              //right 7 bloacks
 
   chassis.pid_targets_reset();                // Resets PID targets to 0
   chassis.drive_imu_reset();                  // Reset gyro position to 0

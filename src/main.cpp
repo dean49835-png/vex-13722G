@@ -61,8 +61,8 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
+      {"Right Side 7 Ball", drive_example},
       {"Left Side Split", turn_example},
-      {"Right Side Split", drive_example},
       {"odom", motion_chaining},
       {"Skills Right Side", wait_until_change_speed},
       {"Left Side Non-Split", swing_example},
