@@ -299,13 +299,13 @@ void wait_until_change_speed() {        //skills, but starts from left side
 
   tripleDown.set(false);
   matchLoad.set(true); 
-  chassis.pid_drive_set(31_in, 110, true);
+  chassis.pid_drive_set(32_in, 100, true);
   pros::delay(2200);
   chassis.pid_drive_set(-31_in, 110, true);
   pros::delay(800);
   tripleUp.set(true);
   tripleDown.set(true);
-  pros::delay(1700);
+  pros::delay(2000);
   chassis.pid_drive_set(15_in, 110, true);
   chassis.pid_wait_quick();
 
@@ -325,21 +325,21 @@ void wait_until_change_speed() {        //skills, but starts from left side
 
   tripleUp.set(true);
   tripleDown.set(false); 
-  chassis.pid_drive_set(19_in, 110, true);      //세번째 메치로더
-  pros::delay(2200);
+  chassis.pid_drive_set(20_in, 100, true);      //세번째 메치로더
+  pros::delay(2300);
 
   chassis.pid_drive_set(-16_in, 110, true);
   intakeLeft.move(0);
   intakeRight.move(0);
   chassis.pid_wait_quick();
 
-  chassis.pid_turn_set(22_deg, 110);
+  chassis.pid_turn_set(20_deg, 110);
   chassis.pid_wait_quick();
 
   chassis.pid_drive_set(-18_in, 110, true);
   chassis.pid_wait_quick();
   
-  chassis.pid_turn_set(-22_deg, 110);
+  chassis.pid_turn_set(-21_deg, 110);
   chassis.pid_wait_quick();
 
   matchLoad.set(false);
@@ -364,23 +364,34 @@ void wait_until_change_speed() {        //skills, but starts from left side
   tripleDown.set(true); 
   intakeLeft.move(127);
   intakeRight.move(127);
-  pros::delay(1000);      //애가 스코어시간임 마지막
+  pros::delay(1000);      //애가 스코어시간임 마지막 바로 전
   chassis.pid_wait_quick();
 
   tripleDown.set(false);
   matchLoad.set(true); 
-  chassis.pid_drive_set(31_in, 110, true);
+  chassis.pid_drive_set(32_in, 100, true);
   pros::delay(2200);
   chassis.pid_drive_set(-31_in, 110, true);
   pros::delay(800);
   tripleUp.set(true);
   tripleDown.set(true);
-  pros::delay(2000);
+  pros::delay(2200);
   chassis.pid_drive_set(20_in, 110, true);
   chassis.pid_wait_quick();
 
   matchLoad.set(false);
-  chassis.pid_turn_set(63_deg, 110);
+  intakeLeft.move(0);
+  intakeRight.move(0);
+  chassis.pid_wait_quick();
+
+  chassis.pid_turn_set(105_deg, 110);
+  chassis.pid_wait_quick();
+
+  intakeLeft.move(127);
+  intakeRight.move(127);
+  tripleUp.set(true);
+  tripleDown.set(true);
+  chassis.pid_drive_set(65_in, 95, true);
   chassis.pid_wait_quick();
 
 
