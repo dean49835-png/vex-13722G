@@ -61,12 +61,13 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"Right Side 7 Ball", drive_example},
-      {"Left Side Split", turn_example},
-      {"odom", motion_chaining},
-      {"Skills Right Side", wait_until_change_speed},
-      {"Left Side Non-Split", swing_example},
+      {"SKILLS, BUT START FROM LEFT SIDE", wait_until_change_speed},
+      {"RIGHT SIDE 7 BALL", drive_example},
+      {"LEFT SIDE SPLIT", turn_example},
       {"NOTHING", drive_and_turn},
+
+      {"odom", motion_chaining},
+      {"Left Side Non-Split", swing_example},
       {"Combine all 3 movements", combining_movements},
       {"Interference\n\nAfter driving forward, robot performs differently if interfered or not", interfered_example},
       {"Simple Odom\n\nThis is the same as the drive example, but it uses odom instead!", odom_drive_example},
