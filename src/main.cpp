@@ -65,7 +65,6 @@ void initialize() {
       {"RIGHT SIDE 7 BALL", drive_example},
       {"LEFT SIDE SPLIT", turn_example},
       {"NOTHING", drive_and_turn},
-
       {"odom", motion_chaining},
       {"Left Side Non-Split", swing_example},
       {"Combine all 3 movements", combining_movements},

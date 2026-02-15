@@ -228,7 +228,6 @@ void wait_until_change_speed() {        //skills, but starts from left side
   chassis.drive_imu_reset();                  // Reset gyro position to 0
   chassis.drive_sensor_reset();               // Reset drive sensors to 0
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
-  chassis.odom_theta_set(0); 
   
   matchLoad.set(false);
   intakeLeft.move(127);
@@ -238,7 +237,7 @@ void wait_until_change_speed() {        //skills, but starts from left side
   wing.set(true);
 
   chassis.pid_drive_set(26_in, 110, true); 
-  pros::delay(380);
+  pros::delay(420);
   matchLoad.set(true); 
   chassis.pid_wait_quick();
 
@@ -259,7 +258,7 @@ void wait_until_change_speed() {        //skills, but starts from left side
   pros::delay(1300);      //애가 스코어시간임
   tripleDown.set(false);
   chassis.pid_drive_set(31_in, 110, true);
-  pros::delay(1900);          //메치로더
+  pros::delay(2050);          //메치로더
 
   chassis.pid_drive_set(-16_in, 110, true);
   chassis.pid_wait_quick();
@@ -272,13 +271,46 @@ void wait_until_change_speed() {        //skills, but starts from left side
   chassis.pid_drive_set(-18_in, 110, true);
   chassis.pid_wait_quick();
   
-  chassis.pid_turn_set(155_deg, 110);
+  chassis.pid_turn_set(154_deg, 110);
   chassis.pid_wait_quick();
 
-  /** 
-  chassis.pid_drive_set(-60_in, 110, true);
+  matchLoad.set(false);
+  chassis.pid_drive_set(-65_in, 110, true);
   chassis.pid_wait_quick();
-  */
+
+  chassis.pid_turn_set(-115_deg, 110);
+  chassis.pid_wait_quick();
+  
+  chassis.pid_drive_set(12_in, 110, true);
+  chassis.pid_wait_quick();
+
+  chassis.pid_turn_set(-25_deg, 110);
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(-12_in, 110, true);
+  pros::delay(900);
+
+  tripleUp.set(true);
+  tripleDown.set(true); 
+  intakeLeft.move(127);
+  intakeRight.move(127);
+  pros::delay(1000);      //애가 스코어시간임(2번째)
+  chassis.pid_wait_quick();
+
+  chassis.pid_targets_reset();                // Resets PID targets to 0
+  chassis.drive_imu_reset();                  // Reset gyro position to 0
+  chassis.drive_sensor_reset();               // Reset drive sensors to 0
+  chassis.pid_wait_quick();
+
+  tripleDown.set(false);
+  matchLoad.set(true); 
+  chassis.pid_drive_set(31_in, 110, true);
+  pros::delay(2050);
+  chassis.pid_drive_set(-31_in, 110, true);
+  pros::delay(1500);
+  tripleUp.set(true);
+  tripleDown.set(true); 
+  chassis.pid_wait_quick();
 
 
 }
@@ -364,7 +396,9 @@ void motion_chaining() {              //odom
   chassis.odom_xyt_set(0_in, 0_in, 0_deg);    // Set the current position, you can start at a specific position with this
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
   
-  chassis.pid_odom_set(24_in, 110, true);
+  chassis.pid_drive_set(20_in, 110, true);
+  chassis.pid_wait();
+  chassis.pid_turn_set(65_deg, 110);
   chassis.pid_wait();
 
 }
