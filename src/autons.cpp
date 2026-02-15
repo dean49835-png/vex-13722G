@@ -227,6 +227,7 @@ void wait_until_change_speed() {        //skills, but starts from left side
   chassis.pid_targets_reset();                // Resets PID targets to 0
   chassis.drive_imu_reset();                  // Reset gyro position to 0
   chassis.drive_sensor_reset();               // Reset drive sensors to 0
+  chassis.odom_xyt_set(0_in, 0_in, 0_deg);    // Set the current position, you can start at a specific position with this
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
   
   matchLoad.set(false);
@@ -237,11 +238,10 @@ void wait_until_change_speed() {        //skills, but starts from left side
   wing.set(true);
 
   chassis.pid_drive_set(26_in, 110, true); 
-  pros::delay(420);
-  matchLoad.set(true); 
   chassis.pid_wait_quick();
 
-  chassis.pid_turn_set(100_deg, 110);  
+  chassis.pid_turn_set(100_deg, 110); 
+  matchLoad.set(true); 
   chassis.pid_wait_quick();
 
   chassis.pid_drive_set(35_in, 110, true);
@@ -258,7 +258,7 @@ void wait_until_change_speed() {        //skills, but starts from left side
   pros::delay(1300);      //애가 스코어시간임
   tripleDown.set(false);
   chassis.pid_drive_set(31_in, 110, true);
-  pros::delay(2050);          //메치로더
+  pros::delay(2200);          //메치로더
 
   chassis.pid_drive_set(-16_in, 110, true);
   chassis.pid_wait_quick();
@@ -297,21 +297,20 @@ void wait_until_change_speed() {        //skills, but starts from left side
   pros::delay(1000);      //애가 스코어시간임(2번째)
   chassis.pid_wait_quick();
 
-  chassis.pid_targets_reset();                // Resets PID targets to 0
-  chassis.drive_imu_reset();                  // Reset gyro position to 0
-  chassis.drive_sensor_reset();               // Reset drive sensors to 0
-  chassis.pid_wait_quick();
-
   tripleDown.set(false);
   matchLoad.set(true); 
   chassis.pid_drive_set(31_in, 110, true);
-  pros::delay(2050);
+  pros::delay(2200);
   chassis.pid_drive_set(-31_in, 110, true);
-  pros::delay(1500);
+  pros::delay(800);
   tripleUp.set(true);
-  tripleDown.set(true); 
+  tripleDown.set(true);
+  pros::delay(1600);
+  chassis.pid_drive_set(15_in, 110, true);
   chassis.pid_wait_quick();
 
+  chassis.pid_turn_set(64_deg, 110);
+  chassis.pid_wait_quick();
 
 }
 
