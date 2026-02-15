@@ -309,7 +309,7 @@ void wait_until_change_speed() {        //skills, but starts from left side
   chassis.pid_drive_set(15_in, 110, true);
   chassis.pid_wait_quick();
 
-  chassis.pid_turn_set(64_deg, 110);
+  chassis.pid_turn_set(63_deg, 110);
   chassis.pid_wait_quick();
 
 }

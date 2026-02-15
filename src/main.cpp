@@ -286,6 +286,14 @@ void opcontrol()
       tripleUp.set(false);
       tripleDown.set(false); 
     } 
+    else if(master.get_digital(DIGITAL_Y))                           //slow mid goal mode
+    {   
+      intakeLeft.move(85);
+      intakeRight.move(85);
+      
+      tripleUp.set(false);
+      tripleDown.set(false); 
+    } 
     else if(master.get_digital(DIGITAL_L2))                               //outtake mode
     {
       intakeLeft.move(-127);
