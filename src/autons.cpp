@@ -90,10 +90,10 @@ void drive_example()               //right side 7 bloacks
   tripleDown.set(true); 
   pros::delay(1300);      //애가 스코어시간임
   tripleDown.set(false);
-  chassis.pid_drive_set(31_in, 110, true);
-  pros::delay(1200);
+  chassis.pid_drive_set(35_in, 50, true);
+  pros::delay(1850);
   chassis.pid_drive_set(-31_in, 110, true);
-  pros::delay(400);
+  pros::delay(600);
   tripleUp.set(true);
   tripleDown.set(true); 
   chassis.pid_wait_quick();
@@ -103,6 +103,7 @@ void drive_example()               //right side 7 bloacks
   chassis.drive_sensor_reset();               // Reset drive sensors to 0
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
   chassis.odom_theta_set(0); 
+  
   intakeLeft.move(0);
   intakeRight.move(0);
   chassis.pid_wait_quick();
@@ -155,11 +156,12 @@ void turn_example() {                 //left side split
   matchLoad.set(false); 
   chassis.pid_wait_quick();
 
-  chassis.pid_drive_set(26_in, 110, true);  
+  chassis.pid_drive_set(21_in, 110, true);  
   pros::delay(450);
-  matchLoad.set(true); 
+  
   pros::delay(700);
-  chassis.pid_drive_set(-10_in, 110, true); 
+  chassis.pid_drive_set(-5_in, 110, true); 
+                                               //fix
   chassis.pid_wait_quick(); 
 
   chassis.pid_turn_set(25_deg, 110);
@@ -167,17 +169,18 @@ void turn_example() {                 //left side split
   chassis.pid_drive_set(-15_in, 110, true); 
   chassis.pid_wait_quick();
   chassis.pid_turn_set(115_deg, 110);
+  matchLoad.set(true);
   chassis.pid_wait_quick(); 
 
-  chassis.pid_drive_set(-10_in, 110, true); 
+  chassis.pid_drive_set(-11_in, 110, true); 
   pros::delay(500);
-  chassis.pid_swing_set(ez::LEFT_SWING, 205_deg, -30, -110);
+  chassis.pid_swing_set(ez::LEFT_SWING, 205_deg, -50, -110);
   pros::delay(1000);
 
+  chassis.pid_drive_set(-9_in, 110, true); 
   tripleUp.set(true);
   tripleDown.set(true);
-  chassis.pid_drive_set(-5_in, 110, true); 
-  pros::delay(950);
+  pros::delay(1100);
   tripleUp.set(true);
   tripleDown.set(false); 
   chassis.pid_wait_quick();
@@ -188,23 +191,22 @@ void turn_example() {                 //left side split
   chassis.odom_xyt_set(0_in, 0_in, 0_deg);    // Set the current position, you can start at a specific position with this
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
   
-  chassis.pid_drive_set(32_in, 110, true);
-  pros::delay(1300);
+  chassis.pid_drive_set(36_in, 50, true);
+  pros::delay(1700);
   chassis.pid_drive_set(-14_in, 110, true);
   chassis.pid_wait_quick();
 
   chassis.pid_turn_set(50_deg, 110);
   chassis.pid_wait_quick();
 
-  chassis.pid_drive_set(-52_in, 110, true);
-  chassis.pid_wait_quick();
+  chassis.pid_drive_set(-52_in, 100, true);
+  pros::delay(850);
 
-  
-  intakeLeft.move(90);
-  intakeRight.move(90);
+  intakeLeft.move(127);
+  intakeRight.move(127);
   tripleUp.set(false);
   tripleDown.set(false);
-  pros::delay(1300);
+  pros::delay(130000);
   chassis.pid_wait_quick();
 
 }
@@ -222,7 +224,7 @@ void drive_and_turn() {                                 //NOTHING
 ///
 // Wait Until and Changing Max Speed
 ///
-void wait_until_change_speed() {        //skills, but starts from left side
+void wait_until_change_speed() {        //skills, but starts from right side
 
   chassis.pid_targets_reset();                // Resets PID targets to 0
   chassis.drive_imu_reset();                  // Reset gyro position to 0
@@ -244,13 +246,13 @@ void wait_until_change_speed() {        //skills, but starts from left side
   matchLoad.set(true); 
   chassis.pid_wait_quick();
 
-  chassis.pid_drive_set(35_in, 110, true);
+  chassis.pid_drive_set(36_in, 110, true);                //first time driving towards matchLoader
   chassis.pid_wait_quick();
 
   chassis.pid_turn_set(155_deg, 110);  
   chassis.pid_wait_quick();
 
-  chassis.pid_drive_set(-20_in, 110, true);
+  chassis.pid_drive_set(-20_in, 1100, true);
   pros::delay(700);
 
   tripleUp.set(true);
@@ -260,7 +262,7 @@ void wait_until_change_speed() {        //skills, but starts from left side
   chassis.pid_drive_set(31_in, 110, true);
   pros::delay(2200);          //메치로더
 
-  chassis.pid_drive_set(-16_in, 110, true);
+  chassis.pid_drive_set(-17_in, 110, true);
   chassis.pid_wait_quick();
 
   intakeLeft.move(0);
@@ -391,8 +393,16 @@ void wait_until_change_speed() {        //skills, but starts from left side
   intakeRight.move(127);
   tripleUp.set(true);
   tripleDown.set(true);
-  chassis.pid_drive_set(65_in, 95, true);
+  chassis.pid_drive_set(65_in, 100, true);                        //parking
   chassis.pid_wait_quick();
+
+  /**
+   * chassis.pid_drive_set(75_in, 100, true);                        //parking
+   * pros::delay(1000);
+   * chassis.pid_turn_set(65_deg, 110);
+   * chassis.pid_wait_quick();
+   * chassis.pid_drive_set(35_in, 100, true);
+   */
 
 
 

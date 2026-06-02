@@ -61,9 +61,9 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"SKILLS, BUT START FROM LEFT SIDE", wait_until_change_speed},
+    {"LEFT SIDE SPLIT", turn_example},
       {"RIGHT SIDE 7 BALL", drive_example},
-      {"LEFT SIDE SPLIT", turn_example},
+      {"SKILLS, BUT START FROM RIGHT SIDE", wait_until_change_speed},
       {"odom", motion_chaining},
       {"NOTHING", drive_and_turn},
       {"Left Side Non-Split", swing_example},
@@ -244,7 +244,7 @@ void ez_template_extras() {
  * task, not resume it from where it left off.
  */
 bool l1 = false;
-bool o1 = false;
+bool o1 = false; 
 
 void opcontrol() 
 {
@@ -315,4 +315,6 @@ void opcontrol()
     }
     pros::delay(ez::util::DELAY_TIME);
 }
+
+
 }
